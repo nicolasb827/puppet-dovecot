@@ -1,14 +1,49 @@
-mxHero Dovecot Puppet Module
-============================
+# Dovecot
+
+[![Build Status](https://travis-ci.org/lvicainne/puppet-dovecot.svg?branch=master)](https://travis-ci.org/lvicainne/puppet-dovecot)
+
+#### Table of Contents
+
+1. [Description](#description)
+2. [Setup - The basics of getting started with BashRC](#setup)
+    * [What dovecot module affects](#what-dovecot-module-affects)
+    * [Setup requirements](#setup-requirements)
+    * [Beginning with dovecot](#beginning-with-dovecot)
+3. [Usage - Configuration options and additional functionality](#usage)
+4. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
+5. [Limitations - OS compatibility, etc.](#limitations)
+6. [Development - Guide for contributing to the module](#development)
+
+## Description
 
 This module works under RedHat, CentOS 6+, Ubuntu 12+ and FreeBSD.
+This module configures a Dovecot server (2.x and later)
 
-Install, enable and configure the Dovecot IMAP server.
-This module relies heavily on the conf.d structure adopted by dovecot 2.x.
+It is a fork from [mxHero](https://github.com/mxhero/puppet-dovecot)
+
+## Setup
+
+### What Dovecot module affects
+
+* Modify the files linked to dovecot (usually in /etc/dovecot) using the conf.d structure adopted by Dovecot 2.x.
+* Install all the packages linked to Dovecot IMAP server.
+* This module make also working managesieve.
+
+### Beginning with Dovecot
+
+A basic example is as follows:
+
+```puppet
+  include ::dovecot
+```
+
+## Usage 
 
 * `dovecot` : Main class
 * `dovecot::file` : Definition to manage configuration file snippets
 * `dovecot::plugin` : Definition to install plugin sub-packages
+
+This module is fully Hiera compliant : you can define your module data only in Hiera.
 
 Example Configuration
 ---------------------
@@ -34,3 +69,15 @@ Example Configuration
     dovecot::file { 'dovecot-sql.conf.ext':
         source => 'puppet:///modules/example/dovecot-sql.conf.ext',
     }
+
+## Limitations
+
+This module has only been tested on my Debian and Centos servers. I can not guarantee for any other Operating System
+
+## Development
+
+I chose to open mu own Dovecot Module ; but you are free to contribute on it, etc.
+
+## Release Notes/Contributors/Etc. 
+
+It is a fork from [mxHero](https://github.com/mxhero/puppet-dovecot)
