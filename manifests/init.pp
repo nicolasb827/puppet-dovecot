@@ -226,7 +226,7 @@ class dovecot (
         'FreeBSD' : {
           $packages  = 'mail/dovecot2'
         }
-        default: { fail("OS $::operatingsystem and version $::operatingsystemrelease is not supported.")
+        default: { fail("OS ${::operatingsystem} and version ${::operatingsystemrelease} is not supported.")
         }
       }
     } else {
@@ -246,7 +246,7 @@ class dovecot (
         $directory = '/usr/local/etc/dovecot'
         $prefix    = 'mail/dovecot2'
     }
-    default: { fail("OS $::operatingsystem and version $::operatingsystemrelease is not supported") }
+    default: { fail("OS ${::operatingsystem} and version ${::operatingsystemrelease} is not supported") }
     }
 
     # All files in this scope are dovecot configuration files
@@ -269,15 +269,15 @@ class dovecot (
     package { $packages: ensure => $ensure_packages }
     if $manage_service {
       service { 'dovecot':
-        enable    => true,
         ensure    => running,
+        enable    => true,
         hasstatus => true,
         require   => File["${directory}/dovecot.conf"],
       }
     }
 
     # Main configuration directory
-    file { "${directory}":
+    file { $directory:
         ensure => 'directory',
     }
     file { "${directory}/conf.d":
