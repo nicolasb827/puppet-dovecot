@@ -3,7 +3,7 @@
     "version": "0.0.3",
     "author": "lvicainne",
     "license": "Apache-2.0",
-    "summary": "Configure a Vim editor",
+    "summary": "Configure Dovecot",
     "description": "Configure Dovecot",
     "source": "https://github.com/lvicainne/puppet-dovecot",
     "project_page": "https://forge.puppetlabs.com/lvicainne/dovecot",
