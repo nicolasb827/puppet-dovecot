@@ -9,4 +9,3 @@
 define dovecot::plugin( $prefix = 'dovecot' ) {
     package { "${prefix}-${title}": ensure => installed }
 }
-

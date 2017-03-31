@@ -65,11 +65,11 @@ namespace inbox {
   # Hierarchy separator to use. You should use the same separator for all
   # namespaces or some clients get confused. '/' is usually a good one.
   # The default however depends on the underlying mail storage format.
-  #separator = 
+  #separator =
 
   # Prefix required to access this namespace. This needs to be different for
   # all namespaces. For example "Public/".
-  #prefix = 
+  #prefix =
 
   # Physical location of the mailbox. This is in same format as
   # mail_location, which is also the default for it.
@@ -140,6 +140,16 @@ namespace {
   list = yes
 }
 <%- end %>
+
+<% if !@custom_namespaces.empty? -%>
+<% @custom_namespaces.each_pair do |name, data| -%>
+namespace <%= name %> {
+<% data.each_pair do |key, value| -%>
+  <%= key %> = <%= value %>
+<%- end -%>
+}
+<%- end -%>
+<%- end -%>
 
 # Should shared INBOX be visible as "shared/user" or "shared/user/INBOX"?
 #mail_shared_explicit_inbox = yes
@@ -233,12 +243,12 @@ mail_nfs_index = <%= @mail_nfs_index %>
 # Note that denying root logins is hardcoded to dovecot binary and can't
 # be done even if first_valid_uid is set to 0.
 <%- if @first_valid_uid -%>
-first_valid_uid = <%= @first_valid_uid -%>
+first_valid_uid = <%= @first_valid_uid %>
 <% else -%>
 #first_valid_uid = 500
 <% end -%>
 <%- if @last_valid_uid -%>
-last_valid_uid = <%= @last_valid_uid -%>
+last_valid_uid = <%= @last_valid_uid %>
 <% else -%>
 #last_valid_uid = 0
 <% end %>
@@ -261,7 +271,7 @@ last_valid_uid = <%= @last_valid_uid -%>
 # WARNING: Never add directories here which local users can modify, that
 # may lead to root exploit. Usually this should be done only if you don't
 # allow shell access for users. <doc/wiki/Chrooting.txt>
-#valid_chroot_dirs = 
+#valid_chroot_dirs =
 
 # Default chroot directory for mail processes. This can be overridden for
 # specific users in user database by giving /./ in user's home directory
@@ -269,7 +279,7 @@ last_valid_uid = <%= @last_valid_uid -%>
 # need to do chrooting, Dovecot doesn't allow users to access files outside
 # their mail directory anyway. If your home directories are prefixed with
 # the chroot directory, append "/." to mail_chroot. <doc/wiki/Chrooting.txt>
-#mail_chroot = 
+#mail_chroot =
 
 # UNIX socket path to master authentication server to find users.
 # This is used by imap (for shared users) and lda.
@@ -280,7 +290,7 @@ last_valid_uid = <%= @last_valid_uid -%>
 
 # Space separated list of plugins to load for all services. Plugins specific to
 # IMAP, LDA, etc. are added to this list in their own .conf files.
-#mail_plugins = 
+#mail_plugins =
 <% if @mail_plugins -%>
 mail_plugins = <%= @mail_plugins %>
 <% end -%>
@@ -376,7 +386,7 @@ mbox_write_locks = fcntl
 # fallbacks to re-reading the whole mbox file whenever something in mbox isn't
 # how it's expected to be. The only real downside to this setting is that if
 # some other MUA changes message flags, Dovecot doesn't notice it immediately.
-# Note that a full sync is done with SELECT, EXAMINE, EXPUNGE and CHECK 
+# Note that a full sync is done with SELECT, EXAMINE, EXPUNGE and CHECK
 # commands.
 #mbox_dirty_syncs = yes
 

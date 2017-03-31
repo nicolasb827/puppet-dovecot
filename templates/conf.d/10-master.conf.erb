@@ -32,13 +32,13 @@ service imap-login {
 <% end -%>
   inet_listener imap {
     #port = 143
-<% if @imaplogin_imap_port and @imaplogin_imap_port > 0 -%>
+<% if @imaplogin_imap_port and @imaplogin_imap_port >= 0 -%>
     port = <%= @imaplogin_imap_port %>
-<% end -%>
   }
+<% end -%>
   inet_listener imaps {
     #port = 993
-<% if @imaplogin_imaps_port and @imaplogin_imaps_port > 0 -%>
+<% if @imaplogin_imaps_port and @imaplogin_imaps_port >= 0 -%>
     port = <%= @imaplogin_imaps_port %>
 <% end -%>
     #ssl = yes
@@ -68,6 +68,7 @@ service imap-login {
 <% end -%>
 }
 
+<% if @enable_pop3 -%>
 service pop3-login {
   inet_listener pop3 {
     #port = 110
@@ -83,6 +84,7 @@ service pop3-login {
   process_min_avail = <%= @pop3_login_process_min_avail %>
 <% end -%>
 }
+<% end -%>
 
 service lmtp {
   unix_listener <% if @lmtp_unix_listener -%><%= @lmtp_unix_listener %><% else %>lmtp<% end -%> {
@@ -90,11 +92,11 @@ service lmtp {
 <% if @lmtp_unix_listener_mode -%>
     mode = <%= @lmtp_unix_listener_mode %>
 <% end -%>
-    #user = 
+    #user =
 <% if @lmtp_unix_listener_user -%>
     user = <%= @lmtp_unix_listener_user %>
 <% end -%>
-    #group = 
+    #group =
 <% if @lmtp_unix_listener_group -%>
     group = <%= @lmtp_unix_listener_group %>
 <% end -%>
@@ -104,7 +106,7 @@ service lmtp {
   #inet_listener lmtp {
     # Avoid making LMTP visible for the entire internet
     #address =
-    #port = 
+    #port =
   #}
 <% if @lmtp_socket_path -%>
   unix_listener <%= @lmtp_socket_path %> {
@@ -154,11 +156,11 @@ service auth {
 <% if @auth_listener_userdb_mode -%>
     mode = <%= @auth_listener_userdb_mode %>
 <% end -%>
-    #user = 
+    #user =
 <% if @auth_listener_userdb_user -%>
     user = <%= @auth_listener_userdb_user %>
 <% end -%>
-    #group = 
+    #group =
 <% if @auth_listener_userdb_group -%>
     group = <%= @auth_listener_userdb_group %>
 <% end -%>
@@ -203,7 +205,7 @@ service dict {
   # For example: mode=0660, group=vmail and global mail_access_groups=vmail
   unix_listener dict {
     #mode = 0600
-    #user = 
-    #group = 
+    #user =
+    #group =
   }
 }

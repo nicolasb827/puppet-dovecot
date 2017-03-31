@@ -1,13 +1,13 @@
 ##
 ## Settings for the Sieve interpreter
-## 
+##
 
 # Do not forget to enable the Sieve plugin in 15-lda.conf and 20-lmtp.conf
 # by adding it to the respective mail_plugins= settings.
 
 plugin {
   # The path to the user's main active script. If ManageSieve is used, this the
-  # location of the symbolic link controlled by ManageSieve. 
+  # location of the symbolic link controlled by ManageSieve.
   #sieve = ~/.sieve/dovecot.sieve
 <% if @sieve -%>
   sieve = <%= @sieve %>
@@ -28,7 +28,7 @@ plugin {
   #sieve_default = /var/lib/dovecot/sieve/default.sieve
 
   # Directory for :personal include scripts for the include extension. This
-  # is also where the ManageSieve service stores the user's scripts 
+  # is also where the ManageSieve service stores the user's scripts
   #sieve_dir = ~/.sieve
 <% if @sieve_dir -%>
   sieve_dir = <%= @sieve_dir %>
@@ -36,6 +36,9 @@ plugin {
 
   # Directory for :global include scripts for the include extension.
   #sieve_global_dir =
+<% if @sieve_global_dir -%>
+  sieve_global_dir = <%= @sieve_global_dir %>
+<%- end %>
 
   # Path to a script file or a directory containing script files that need to be
   # executed before the user's script. If the path points to a directory, all
