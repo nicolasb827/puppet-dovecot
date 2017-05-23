@@ -19,7 +19,7 @@
 # Protocols we want to be serving.
 #protocols = imap pop3 lmtp
 
-# A comma separated list of IPs or hosts where to listen in for connections. 
+# A comma separated list of IPs or hosts where to listen in for connections.
 # "*" listens in all IPv4 interfaces, "::" listens in all IPv6 interfaces.
 # If you want to specify non-default ports or anything more complex,
 # edit conf.d/master.conf.
@@ -38,7 +38,7 @@
 #login_trusted_networks =
 
 # Sepace separated list of login access check sockets (e.g. tcpwrap)
-#login_access_sockets = 
+#login_access_sockets =
 
 # Show more verbose process titles (in ps). Currently shows user name and
 # IP address. Useful for seeing who are actually using the IMAP processes

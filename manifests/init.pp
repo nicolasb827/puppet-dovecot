@@ -6,138 +6,145 @@
 #    Array of plugin sub-packages to install. Default: empty
 #
 class dovecot (
-    $plugins                    = [],
+    $plugins                      = [],
     # dovecot.conf
-    $protocols                  = undef,
-    $listen                     = undef,
-    $login_greeting             = undef,
-    $login_trusted_networks     = undef,
-    $verbose_proctitle          = undef,
-    $shutdown_clients           = undef,
+    $protocols                    = undef,
+    $listen                       = undef,
+    $login_greeting               = undef,
+    $login_trusted_networks       = undef,
+    $verbose_proctitle            = undef,
+    $shutdown_clients             = undef,
     # 10-auth.conf
-    $disable_plaintext_auth     = undef,
-    $auth_username_chars        = undef,
-    $auth_mechanisms            = 'plain',
-    $auth_include               = [ 'system' ],
+    $disable_plaintext_auth       = undef,
+    $auth_username_chars          = undef,
+    $auth_username_format         = undef,
+    $auth_mechanisms              = 'plain',
+    $auth_include                 = [ 'system' ],
     # 10-logging.conf
-    $log_path                   = undef,
-    $log_timestamp              = undef,
-    $auth_verbose               = undef,
-    $auth_debug                 = undef,
-    $mail_debug                 = undef,
+    $log_path                     = undef,
+    $log_timestamp                = undef,
+    $debug_log_path               = undef,
+    $info_log_path                = undef,
+    $auth_verbose                 = undef,
+    $auth_debug                   = undef,
+    $mail_debug                   = undef,
     # 10-mail.conf
-    $mail_home                  = undef,
-    $mail_fsync                 = undef,
-    $mail_location              = undef,
-    $mail_uid                   = undef,
-    $mail_gid                   = undef,
-    $mail_nfs_index             = undef,
-    $mail_nfs_storage           = undef,
-    $mail_privileged_group      = undef,
-    $mail_plugins               = undef,
-    $mmap_disable               = undef,
-    $dotlock_use_excl           = undef,
-    $include_inbox_namespace    = undef,
+    $mail_home                    = undef,
+    $mail_fsync                   = undef,
+    $mail_location                = undef,
+    $mail_uid                     = undef,
+    $mail_gid                     = undef,
+    $mail_nfs_index               = undef,
+    $mail_nfs_storage             = undef,
+    $mail_privileged_group        = undef,
+    $mail_plugins                 = undef,
+    $mmap_disable                 = undef,
+    $dotlock_use_excl             = undef,
+    $include_inbox_namespace      = undef,
+    $custom_namespaces            = {},
     # 10-master.conf
-    $default_process_limit      = undef,
-    $default_client_limit       = undef,
-    $auth_listener_userdb_mode   = undef,
-    $auth_listener_userdb_user   = undef,
-    $auth_listener_userdb_group  = undef,
-    $auth_listener_postfix       = false,
-    $auth_listener_postfix_mode  = undef,
-    $auth_listener_postfix_user  = undef,
-    $auth_listener_postfix_group = undef,
-    $imap_login_process_limit   = undef,
-    $imap_login_client_limit    = undef,
-    $imap_login_service_count   = undef,
+    $default_process_limit        = undef,
+    $default_client_limit         = undef,
+    $auth_listener_userdb_mode    = undef,
+    $auth_listener_userdb_user    = undef,
+    $auth_listener_userdb_group   = undef,
+    $auth_listener_postfix        = false,
+    $auth_listener_postfix_mode   = undef,
+    $auth_listener_postfix_user   = undef,
+    $auth_listener_postfix_group  = undef,
+    $imap_login_process_limit     = undef,
+    $imap_login_client_limit      = undef,
+    $imap_login_service_count     = undef,
     $imap_login_process_min_avail = undef,
-    $imap_login_vsz_limit       = undef,
-    $pop3_login_service_count   = undef,
+    $imap_login_vsz_limit         = undef,
+    $enable_pop3                  = true,
+    $pop3_login_service_count     = undef,
     $pop3_login_process_min_avail = undef,
-    $default_vsz_limit          = undef,
-    $auth_listener_default_user = undef,
-    $imaplogin_imap_port         = 0,
-    $imaplogin_imaps_port        = 0,
-    $imaplogin_imaps_ssl         = false,
-    $lmtp_unix_listener          = undef,
-    $lmtp_unix_listener_mode     = undef,
-    $lmtp_unix_listener_user     = undef,
-    $lmtp_unix_listener_group    = undef,
-    $lmtp_socket_group          = undef,
-    $lmtp_socket_mode           = undef,
-    $lmtp_socket_path           = undef,
-    $lmtp_socket_user           = undef,
+    $default_vsz_limit            = undef,
+    $auth_listener_default_user   = undef,
+    $imaplogin_imap_port          = -1,
+    $imaplogin_imaps_port         = -1,
+    $imaplogin_imaps_ssl          = false,
+    $lmtp_unix_listener           = undef,
+    $lmtp_unix_listener_mode      = undef,
+    $lmtp_unix_listener_user      = undef,
+    $lmtp_unix_listener_group     = undef,
+    $lmtp_socket_group            = undef,
+    $lmtp_socket_mode             = undef,
+    $lmtp_socket_path             = undef,
+    $lmtp_socket_user             = undef,
     # 10-ssl.conf
-    $ssl                        = undef,
-    $ssl_cert                   = '/etc/pki/dovecot/certs/dovecot.pem',
-    $ssl_key                    = '/etc/pki/dovecot/private/dovecot.pem',
-    $ssl_cipher_list            = undef,
-    $ssl_protocols              = undef,
-    $ssl_dh_parameters_length   = undef,
+    $ssl                          = undef,
+    $ssl_cert                     = '/etc/pki/dovecot/certs/dovecot.pem',
+    $ssl_key                      = '/etc/pki/dovecot/private/dovecot.pem',
+    $ssl_cipher_list              = undef,
+    $ssl_protocols                = undef,
+    $ssl_dh_parameters_length     = undef,
     # 15-lda.conf
-    $postmaster_address         = undef,
-    $hostname                   = undef,
-    $lda_mail_plugins           = undef,
-    $lda_mail_location          = undef,
-    $lda_mailbox_autocreate     = undef,
-    $lda_mailbox_autosubscribe  = undef,
+    $postmaster_address           = undef,
+    $hostname                     = undef,
+    $lda_mail_plugins             = undef,
+    $lda_mail_location            = undef,
+    $lda_mailbox_autocreate       = undef,
+    $lda_mailbox_autosubscribe    = undef,
     # 20-imap.conf
-    $imap_listen_port            = '*:143',
-    $imaps_listen_port           = '*:993',
-    $imap_mail_plugins          = undef,
-    $imap_client_workarounds    = undef,
+    $imap_listen_port             = '*:143',
+    $imaps_listen_port            = '*:993',
+    $imap_mail_plugins            = undef,
+    $imap_client_workarounds      = undef,
+    $protocol_imap_listen         = true,
     # 20-lmtp.conf
-    $lmtp_mail_plugins          = undef,
-    $lmtp_save_to_detail_mailbox = undef,
+    $lmtp_mail_plugins            = undef,
+    $lmtp_save_to_detail_mailbox  = false,
     # 20-pop3.conf
-    $pop3_mail_plugins          = undef,
-    $pop3_uidl_format           = undef,
-    $pop3_client_workarounds    = undef,
+    $pop3_mail_plugins            = undef,
+    $pop3_uidl_format             = undef,
+    $pop3_client_workarounds      = undef,
     # 20-managesieve.conf
-    $manage_sieve               = undef,
-    $managesieve_service         = false,
-    $managesieve_service_count   = 0,
+    $manage_sieve                 = undef,
+    $managesieve_service          = false,
+    $managesieve_service_count    = 0,
     # 90-sieve.conf
-    $sieve                      = '~/.dovecot.sieve',
-    $sieve_after                = undef,
-    $sieve_before               = undef,
-    $sieve_dir                  = '~/sieve',
-    $sieve_max_actions          = undef,
-    $sieve_max_redirects        = undef,
-    $sieve_max_script_size      = undef,
-    $sieve_quota_max_scripts    = undef,
-    $sieve_quota_max_storage    = undef,
-    $sieve_extensions            = undef,
-    $recipient_delimiter         = undef,
+    $sieve                        = '~/.dovecot.sieve',
+    $sieve_after                  = undef,
+    $sieve_before                 = undef,
+    $sieve_dir                    = '~/sieve',
+    $sieve_global_dir             = undef,
+    $sieve_max_actions            = undef,
+    $sieve_max_redirects          = undef,
+    $sieve_max_script_size        = undef,
+    $sieve_quota_max_scripts      = undef,
+    $sieve_quota_max_storage      = undef,
+    $sieve_extensions             = undef,
+    $recipient_delimiter          = undef,
     # 90-plugin.conf
-    $fts                        = undef,
+    $fts                          = undef,
     # 90-quota.conf
-    $quota                      = undef,
-    $quota_warnings             = [],
+    $quota                        = undef,
+    $quota_warnings               = [],
     # auth-passwdfile.conf.ext
-    $auth_passwdfile_passdb     = undef,
-    $auth_passwdfile_userdb     = undef,
+    $auth_passwdfile_passdb       = undef,
+    $auth_passwdfile_userdb       = undef,
     # auth-sql.conf.ext
-    $auth_sql_userdb_static     = undef,
-    $auth_sql_path              = '/etc/dovecot/dovecot-sql.conf.ext',
+    $auth_sql_userdb_static       = undef,
+    $auth_sql_path                = '/etc/dovecot/dovecot-sql.conf.ext',
     # auth-ldap.conf.ext
-    $auth_ldap_userdb_static    = undef,
-    $auth_master_separator      = '*',
-    $mail_max_userip_connections = 512,
-    $first_valid_uid             = false,
-    $last_valid_uid              = false,
+    $auth_ldap_userdb_static      = undef,
+    $auth_master_separator        = '*',
+    $mail_max_userip_connections  = 512,
+    $first_valid_uid              = false,
+    $last_valid_uid               = false,
 
-    $manage_service              = true,
-    $custom_packages             = undef,
-    $ensure_packages             = 'installed',
+    $manage_service               = true,
+    $custom_packages              = undef,
+    $ensure_packages              = 'installed',
 
-    $ldap_uris                   = undef,
-    $quota_enabled               = false,
-    $acl_enabled                 = false,
-    $replication_enabled         = false,
-    $shared_mailboxes            = false,
-    $options_plugins             = {},
+    $ldap_uris                    = undef,
+    $quota_enabled                = false,
+    $acl_enabled                  = false,
+    $replication_enabled          = false,
+    $shared_mailboxes             = false,
+    $options_plugins              = {},
 ) {
 
     validate_array($plugins)
@@ -151,6 +158,7 @@ class dovecot (
     # 10-auth.conf
     validate_bool($disable_plaintext_auth)
     validate_string($auth_username_chars)
+    validate_string($auth_username_format)
     validate_string($auth_mechanisms)
     validate_array($auth_include)
     # 10-mail.conf
@@ -234,10 +242,10 @@ class dovecot (
     }
 
     case $::operatingsystem {
-    'RedHat', 'CentOS': { 
+    'RedHat', 'CentOS': {
         $directory = '/etc/dovecot'
         $prefix    = 'dovecot'
-    } 
+    }
     /^(Debian|Ubuntu)$/:{
         $directory = '/etc/dovecot'
         $prefix    = 'dovecot'
@@ -326,13 +334,13 @@ class dovecot (
     file { "${directory}/conf.d/20-pop3.conf":
         content => template('dovecot/conf.d/20-pop3.conf.erb'),
     }
-    
+
     if $manage_sieve {
       file { "${directory}/conf.d/20-managesieve.conf":
           content => template('dovecot/conf.d/20-managesieve.conf.erb'),
       }
     }
-    
+
     file { "${directory}/conf.d/90-sieve.conf":
         content => template('dovecot/conf.d/90-sieve.conf.erb'),
     }
@@ -363,4 +371,3 @@ class dovecot (
         content => template('dovecot/conf.d/auth-ldap.conf.ext.erb'),
     }
 }
-

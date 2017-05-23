@@ -15,17 +15,28 @@
 
 # Space separated list of LDAP hosts to use. host:port is allowed too.
 #hosts = localhost powell.vicainne.fr
+<% if @config.key?("hosts") -%>
+hosts = <%= @config["hosts"] %>
+<% end -%>
 
 # LDAP URIs to use. You can use this instead of hosts list. Note that this
 # setting isn't supported by all LDAP libraries.
+<% if defined?(@ldap_uris) -%>
 uris =  <%= @ldap_uris %>
+<% end -%>
 
 # Distinguished Name - the username used to login to the LDAP server.
 # Leave it commented out to bind anonymously (useful with auth_bind=yes).
 #dn =
+<% if @config.key?("dn") -%>
+dn = <%= @config["dn"] %>
+<% end -%>
 
 # Password for LDAP server, if dn is specified.
 #dnpass =
+<% if @config.key?("dnpass") -%>
+dnpass = <%= @config["dnpass"] %>
+<% end -%>
 
 # Use SASL binding instead of the simple binding. Note that this changes
 # ldap_version automatically to be 3 if it's lower. Also note that SASL binds
@@ -40,7 +51,11 @@ uris =  <%= @ldap_uris %>
 #sasl_authz_id =
 
 # Use TLS to connect to the LDAP server.
+<% if @config.key?("tls") -%>
+tls = <%= @config["tls"] %>
+<% else -%>
 tls = yes
+<% end -%>
 # TLS options, currently supported only with OpenLDAP:
 #tls_ca_cert_file =
 #tls_ca_cert_dir =
@@ -58,13 +73,20 @@ tls_require_cert = never
 # -1 = everything. You may need to recompile OpenLDAP with debugging enabled
 # to get enough output.
 #debug_level = 0
+<% if @config.key?("debug_level") -%>
+debug_level = <%= @config["debug_level"] %>
+<% end -%>
 
 # Use authentication binding for verifying password's validity. This works by
 # logging into LDAP server using the username and password given by client.
 # The pass_filter is used to find the DN for the user. Note that the pass_attrs
 # is still used, only the password field is ignored in it. Before doing any
 # search, the binding is switched back to the default DN.
+<% if @config.key?("auth_bind") -%>
+auth_bind = <%= @config["auth_bind"] %>
+<% else -%>
 auth_bind = yes
+<% end -%>
 
 # If authentication binding is used, you can save one LDAP request per login
 # if users' DN can be specified with a common template. The template can use
@@ -80,17 +102,32 @@ auth_bind = yes
 # For example:
 #   auth_bind_userdn = cn=%u,ou=people,o=org
 #
+<% if @config.key?("auth_bind_userdn") -%>
+auth_bind_userdn = <%= @config["auth_bind_userdn"] %>
+<% else -%>
 auth_bind_userdn = uid=%u,ou=People,dc=vicainne,dc=fr
+<% end -%>
 
 # LDAP protocol version to use. Likely 2 or 3.
+<% if @config.key?("ldap_version") -%>
+ldap_version = <%= @config["ldap_version"] %>
+<% else -%>
 ldap_version = 3
+<% end -%>
 
 # LDAP base. %variables can be used here.
 # For example: dc=mail, dc=example, dc=org
+<% if @config.key?("base") -%>
+base = <%= @config["base"] %>
+<% else -%>
 base = dc=vicainne,dc=fr
+<% end -%>
 
 # Dereference: never, searching, finding, always
 #deref = never
+<% if @config.key?("deref") -%>
+deref = <%= @config["deref"] %>
+<% end -%>
 
 # Search scope: base, onelevel, subtree
 scope = subtree
@@ -105,7 +142,11 @@ scope = subtree
 # There are also other special fields which can be returned, see
 # http://wiki.dovecot.org/UserDatabase/ExtraFields
 #user_attrs = homeDirectory=home,uidNumber=uid,gidNumber=gid
+<% if @config.key?("user_attrs") -%>
+user_attrs = <%= @config["user_attrs"] %>
+<% else -%>
 user_attrs = uidNumber=5000,gidNumber=5000,quotaDovecot=quota,mail_plugins
+<% end -%>
 ###user_attrs = homeDirectory=home,uidNumber=5000,gidNumber=5000,quotaDovecot=quota,mail_plugins
 #user_attrs = uidNumber=5000,gidNumber=5000, homeDirectory=home,home=/home/vmail/%u,allow_all_users=yes
 # uid=vmail gid=vmail home=/home/vmail/%u allow_all_users=yes
@@ -115,8 +156,11 @@ user_attrs = uidNumber=5000,gidNumber=5000,quotaDovecot=quota,mail_plugins
 #   %n - user part in user@domain, same as %u if there's no domain
 #   %d - domain part in user@domain, empty if user there's no domain
 #user_filter = (&(objectClass=posixAccount)(uid=%u))
+<% if @config.key?("user_filter") -%>
+user_filter = <%= @config["user_filter"] %>
+<% else -%>
 user_filter = (|(mail=%u)(uid=%u))
-
+<% end -%>
 
 # Password checking attributes:
 #  user: Virtual user name (user@domain), if you wish to change the
@@ -124,7 +168,11 @@ user_filter = (|(mail=%u)(uid=%u))
 #  password: Password, may optionally start with {type}, eg. {crypt}
 # There are also other special fields which can be returned, see
 # http://wiki.dovecot.org/PasswordDatabase/ExtraFields
+<% if @config.key?("pass_attrs") -%>
+pass_attrs = <%= @config["pass_attrs"] %>
+<% else -%>
 pass_attrs = uid=user,userPassword=password
+<% end -%>
 
 # If you wish to avoid two LDAP lookups (passdb + userdb), you can use
 # userdb prefetch instead of userdb ldap in dovecot.conf. In that case you'll
@@ -135,6 +183,9 @@ pass_attrs = uid=user,userPassword=password
 
 # Filter for password lookups
 #pass_filter = (&(objectClass=posixAccount)(uid=%u))
+<% if @config.key?("pass_filter") -%>
+pass_filter = <%= @config["pass_filter"] %>
+<% end -%>
 
 # Attributes and filter to get a list of all users
 iterate_attrs = uid=user
@@ -142,5 +193,8 @@ iterate_filter = (objectClass=posixAccount)
 
 # Default password scheme. "{scheme}" before password overrides this.
 # List of supported schemes is in: http://wiki.dovecot.org/Authentication
+<% if @config.key?("default_pass_scheme") -%>
+default_pass_scheme = <%= @config["default_pass_scheme"] %>
+<% else -%>
 default_pass_scheme = SSHA
-
+<% end -%>
