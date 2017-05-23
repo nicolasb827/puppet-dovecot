@@ -1,3 +1,17 @@
 2012-09-18 - 0.0.1
 * Clean up the dovecot module, update everything for dovecot 2.x.
 
+2017-05-23 - 0.0.4
+* Add auth_username_format config variable (10-auth.conf)
+* Add validate_string for auth_username_format
+* Remove duplicate lines (10-logging.conf, mail_log_group_events)
+* Add more log path settings (10-logging.conf)
+* Add custom_namespaces (10-mail.conf)
+* Fix newline issues with first_valid_uid and last_valid_uid (10-mail.conf)
+* Allow no listen settings in imap protocol section (Obsolete in newer versions) (20-imap.conf)
+* Fix default value for lmtp_save_to_detail_mailbox (20-lmtp.conf)
+* Add sieve_global_dir setting (90-sieve.conf)
+* Change default for ports to "-1". In newer versions of Dovecot, "0" means to *not* listen on that port for that service (init.pp)
+* Alignment and spacing fixes where necessary
+* Make dovecot-ldap.conf.ext useable as a template through dovecot::file
+

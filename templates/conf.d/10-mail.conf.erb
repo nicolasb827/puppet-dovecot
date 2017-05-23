@@ -40,6 +40,9 @@ mail_home = <%= @mail_home -%>
 <% if @include_inbox_namespace -%>
 namespace inbox {
   inbox = yes
+<% if @include_inbox_namespace_separator -%>
+  separator = <%= @include_inbox_namespace_separator -%>
+<% end %>
 }
 <% end %>
 

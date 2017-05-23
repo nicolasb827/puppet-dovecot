@@ -6,6 +6,8 @@
 #    Array of plugin sub-packages to install. Default: empty
 #
 class dovecot (
+    #Version of Dovecot : currently suported : 1 or 2
+    $version                    = 2,
     $plugins                    = [],
     # dovecot.conf
     $protocols                  = undef,
@@ -38,6 +40,7 @@ class dovecot (
     $mmap_disable               = undef,
     $dotlock_use_excl           = undef,
     $include_inbox_namespace    = undef,
+    $include_inbox_namespace_separator = undef,
     # 10-master.conf
     $default_process_limit      = undef,
     $default_client_limit       = undef,
@@ -137,22 +140,41 @@ class dovecot (
     $acl_enabled                 = false,
     $replication_enabled         = false,
     $shared_mailboxes            = false,
+
+
+    $dict_acl                    = undef,
+    $dict_listener_mode          = undef,
+    $dict_listener_user          = undef,
+    $dict_listener_group         = undef,
+    $plugin_acl                  = undef,
+    $plugin_acl_anyone           = undef,
+    $plugin_acl_shared_dict      = undef,
+    $plugin_acl_defaults_from_inbox =  undef,
+
+
     $options_plugins             = {},
 ) {
 
+    validate_integer($version)
     validate_array($plugins)
     # dovecot.conf
     validate_string($protocols)
     validate_string($listen)
     validate_string($login_greeting)
     validate_string($login_trusted_networks)
-
-
+    validate_string($verbose_proctitle)
+    validate_string($shutdown_clients)
     # 10-auth.conf
     validate_bool($disable_plaintext_auth)
     validate_string($auth_username_chars)
     validate_string($auth_mechanisms)
     validate_array($auth_include)
+    # 10-logging.conf
+    validate_string($log_path)
+    validate_string($log_timestamp)
+    validate_string($auth_verbose)
+    validate_string($auth_debug)
+    validate_string($mail_debug)
     # 10-mail.conf
     validate_string($mail_home)
     validate_string($mail_location)
@@ -220,8 +242,16 @@ class dovecot (
         'RedHat', 'CentOS': {
             $packages = ['dovecot','dovecot-pigeonhole']
         }
-        /^(Debian|Ubuntu)$/:{
-            $packages = ['dovecot-common','dovecot-imapd', 'dovecot-pop3d', 'dovecot-managesieved', 'dovecot-mysql', 'dovecot-ldap', 'dovecot-lmtpd']
+        'Debian', 'Ubuntu':{
+            $packages = [
+				'dovecot-core',
+                'dovecot-imapd',
+                'dovecot-pop3d',
+                'dovecot-managesieved',
+                'dovecot-mysql',
+                'dovecot-ldap',
+                'dovecot-lmtpd'
+            ]
         }
         'FreeBSD' : {
           $packages  = 'mail/dovecot2'
@@ -238,7 +268,7 @@ class dovecot (
         $directory = '/etc/dovecot'
         $prefix    = 'dovecot'
     } 
-    /^(Debian|Ubuntu)$/:{
+    'Debian', 'Ubuntu':{
         $directory = '/etc/dovecot'
         $prefix    = 'dovecot'
     }
@@ -333,6 +363,9 @@ class dovecot (
       }
     }
     
+    file { "${directory}/conf.d/90-acl.conf":
+        content => template('dovecot/conf.d/90-acl.conf.erb'),
+    }
     file { "${directory}/conf.d/90-sieve.conf":
         content => template('dovecot/conf.d/90-sieve.conf.erb'),
     }
@@ -359,8 +392,14 @@ class dovecot (
     file { "${directory}/conf.d/auth-sql.conf.ext" :
         content => template('dovecot/conf.d/auth-sql.conf.ext.erb'),
     }
-    file { '/etc/dovecot/conf.d/auth-ldap.conf.ext':
+    file { "${directory}/conf.d/auth-ldap.conf.ext":
         content => template('dovecot/conf.d/auth-ldap.conf.ext.erb'),
+    }
+
+    if 'ldap' in $plugins {
+      file { "${directory}/dovecot-ldap.conf.ext":
+          content => template('dovecot/dovecot-ldap.conf.ext.erb'),
+      }
     }
 }
 

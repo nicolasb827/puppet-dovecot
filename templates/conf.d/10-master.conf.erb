@@ -203,7 +203,16 @@ service dict {
   # For example: mode=0660, group=vmail and global mail_access_groups=vmail
   unix_listener dict {
     #mode = 0600
+<% if @dict_listener_mode -%>
+    mode = <%= @dict_listener_mode %>
+<% end -%>
     #user = 
+<% if @dict_listener_user -%>
+    user = <%= @dict_listener_user %>
+<% end -%>
     #group = 
+<% if @dict_listener_group -%>
+    group = <%= @dict_listener_group %>
+<% end -%>
   }
 }

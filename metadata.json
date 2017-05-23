@@ -1,13 +1,13 @@
 {
     "name": "lvicainne-dovecot",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "author": "lvicainne",
     "license": "Apache-2.0",
     "summary": "Configure Dovecot",
     "description": "Configure Dovecot",
     "source": "https://github.com/lvicainne/puppet-dovecot",
     "project_page": "https://forge.puppetlabs.com/lvicainne/dovecot",
-    "issues_url": "https://github.com/lvicainne/lvicainne-dovecot/issues",
+    "issues_url": "https://github.com/lvicainne/puppet-dovecot/issues",
     "tags": ["dovecot", "mail", "pop", "pop3", "imap"],
     "operatingsystem_support": [
         {

@@ -76,8 +76,10 @@ This module has only been tested on my Debian and Centos servers. I can not guar
 
 ## Development
 
-I chose to open mu own Dovecot Module ; but you are free to contribute on it, etc.
+I chose to open my own Dovecot Module ; but you are free to contribute on it, etc.
 
 ## Release Notes/Contributors/Etc. 
 
 It is a fork from [mxHero](https://github.com/mxhero/puppet-dovecot)
+Thanks to every contributors (Coreone in particular)
+
