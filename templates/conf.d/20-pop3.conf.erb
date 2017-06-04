@@ -88,7 +88,7 @@ protocol pop3 {
   #     Outlook Express and Netscape Mail breaks if end of headers-line is
   #     missing. This option simply sends it if it's missing.
   # The list is space-separated.
-  #pop3_client_workarounds = 
+  #pop3_client_workarounds =
 <% if @pop3_client_workarounds -%>
   pop3_client_workarounds = <%= @pop3_client_workarounds %>
 <% end -%>
