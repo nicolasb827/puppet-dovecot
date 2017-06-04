@@ -1,6 +1,6 @@
 {
     "name": "lvicainne-dovecot",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "author": "lvicainne",
     "license": "Apache-2.0",
     "summary": "Configure Dovecot",
@@ -44,7 +44,6 @@
             "name": "puppet",
             "version_requirement": ">= 4.0.0 < 5.0.0"
         }
-    ],
-    "data_provider": "none"
+    ]
 }
 

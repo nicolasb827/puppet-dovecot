@@ -158,7 +158,6 @@ class dovecot (
     $options_plugins              = {},
 ) {
 
-    validate_integer($version)
     validate_array($plugins)
     # dovecot.conf
     validate_string($protocols)
