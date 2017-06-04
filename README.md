@@ -49,6 +49,7 @@ Example Configuration
 ---------------------
 
     class { 'dovecot':
+        version                    => 2,
         plugins                    => [ 'mysql', 'pigeonhole' ],
         protocols                  => 'imap pop3 sieve',
         verbose_proctitle          => 'yes',
@@ -72,7 +73,8 @@ Example Configuration
 
 ## Limitations
 
-This module has only been tested on my Debian and Centos servers. I can not guarantee for any other Operating System
+This module has only been tested on my Debian and CentOS servers. I can not guarantee for any other Operating System
+Please note the parameter "version" is used to adapt confriguration files to the major version of Dovecot
 
 ## Development
 

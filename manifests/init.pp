@@ -6,6 +6,9 @@
 #    Array of plugin sub-packages to install. Default: empty
 #
 class dovecot (
+    #Version of Dovecot : currently suported : 1 or 2
+    #Used to limit the warnings for new format of dovecot.conf
+    $version                      = 2,
     $plugins                      = [],
     # dovecot.conf
     $protocols                    = undef,
@@ -158,6 +161,7 @@ class dovecot (
     $options_plugins              = {},
 ) {
 
+    validate_integer($version)
     validate_array($plugins)
     # dovecot.conf
     validate_string($protocols)
