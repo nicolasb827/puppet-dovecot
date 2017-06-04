@@ -248,7 +248,7 @@ class dovecot (
         }
         'Debian', 'Ubuntu':{
             $packages = [
-				'dovecot-core',
+                'dovecot-core',
                 'dovecot-imapd',
                 'dovecot-pop3d',
                 'dovecot-managesieved',
