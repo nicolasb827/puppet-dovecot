@@ -14,7 +14,9 @@
 
 # Override the IMAP CAPABILITY response. If the value begins with '+',
 # add the given capabilities on top of the defaults (e.g. +XFOO XBAR).
-#imap_capability =
+<% if @capability -%>
+imap_capability = <%= @capability  %>
+<% end -%>
 
 # How long to wait between "OK Still here" notifications when client is
 # IDLEing.
@@ -52,7 +54,7 @@ imap_client_workarounds = <%= @imap_client_workarounds %>
 <% end -%>
 
 protocol imap {
-<% if @version < 2 -%>
+<% if scope.lookupvar("dovecot::version") < 2 -%>
 <% if @protocol_imap_listen -%>
   listen = <%= @imap_listen_port %>
 <%- if @ssl =~ /yes|required/ -%>
@@ -63,7 +65,9 @@ protocol imap {
   # Maximum number of IMAP connections allowed for a user from each IP address.
   # NOTE: The username is compared case-sensitively.
   #mail_max_userip_connections = 10
-  mail_max_userip_connections = <%= @mail_max_userip_connections %>
+<% if scope.lookupvar("dovecot::mail_max_userip_connections") -%>
+  mail_max_userip_connections = <%= scope.lookupvar("dovecot::mail_max_userip_connections") %>
+<% end %>
 
   # Space separated list of plugins to load (default is global mail_plugins).
   #mail_plugins = $mail_plugins

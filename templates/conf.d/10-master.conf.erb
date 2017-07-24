@@ -70,12 +70,24 @@ service imap-login {
 
 <% if @enable_pop3 -%>
 service pop3-login {
+<% if @pop3_login_process_limit -%>
+  process_limit = <%= @pop3_login_process_limit %>
+<% end -%>
   inet_listener pop3 {
     #port = 110
+<% if @pop3login_pop3_port and @pop3login_pop3_port >= 0 -%>
+    port = <%= @pop3login_pop3_port %>
+<% end -%>
   }
   inet_listener pop3s {
     #port = 995
+<% if @pop3login_pop3s_port and @pop3login_pop3s_port >= 0 -%>
+    port = <%= @pop3login_pop3s_port %>
+<% end -%>
     #ssl = yes
+<% if defined?(@pop3login_pop3s_ssl) -%>
+    ssl = <%= @pop3login_pop3s_ssl ? 'yes' : 'no' %>
+<% end -%>
   }
 <% if not @pop3_login_service_count.nil? -%>
   service_count = <%= @pop3_login_service_count %>
@@ -130,11 +142,23 @@ service imap {
 
   # Max. number of IMAP processes (connections)
   #process_limit = 1024
+<% if @imap_process_limit -%>
+  process_limit = <%= @imap_process_limit %>
+<% end -%>
+<% if @imap_process_limit -%>
+  service_count = <%= @imap_service_count %>
+<% end -%>
 }
 
 service pop3 {
   # Max. number of POP3 processes (connections)
   #process_limit = 1024
+<% if @pop3_process_limit -%>
+  process_limit = <%= @pop3_process_limit %>
+<% end -%>
+<% if @pop3_process_limit -%>
+  service_count = <%= @pop3_service_count %>
+<% end -%>
 }
 
 service auth {

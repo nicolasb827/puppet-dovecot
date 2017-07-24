@@ -1,0 +1,9 @@
+doveadm_password = <%= @password %>
+service doveadm {
+   inet_listener http {
+      port = <%= @port %>
+<% if @ssl -%>
+      ssl = yes
+<% end -%>
+   }
+}

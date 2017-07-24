@@ -11,5 +11,5 @@ passdb {
   deny = yes
 
   # File contains a list of usernames, one per line
-  args = <%= @directory %>/deny-users
+  args = <%= scope.lookupvar("dovecot::directory") %>/deny-users
 }
