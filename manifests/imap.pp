@@ -8,6 +8,8 @@ class dovecot::imap (
     $capability                   = 'IMAP4rev1 UNSELECT ID CHILDREN NAMESPACE IDLE UIDPLUS',
 ) {
 
+    validate_string($imap_mail_plugins)
+
     file { "${dovecot::directory}/conf.d/20-imap.conf":
         content => template('dovecot/conf.d/20-imap.conf.erb'),
     }

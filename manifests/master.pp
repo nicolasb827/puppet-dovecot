@@ -47,7 +47,6 @@ class dovecot::master (
     # 10-master.conf
     validate_string($default_process_limit)
     validate_string($default_client_limit)
-    validate_string($auth_master_separator)
     validate_string($auth_listener_userdb_mode)
     validate_string($auth_listener_userdb_user)
     validate_string($auth_listener_userdb_group)

@@ -12,7 +12,6 @@ class dovecot::lda (
     validate_string($postmaster_address)
     validate_string($hostname)
     validate_string($lda_mail_plugins)
-    validate_string($imap_mail_plugins)
 
     file { "${dovecot::directory}/conf.d/15-lda.conf":
         content => template('dovecot/conf.d/15-lda.conf.erb'),

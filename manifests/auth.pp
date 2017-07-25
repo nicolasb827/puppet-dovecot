@@ -14,6 +14,7 @@ class dovecot::auth (
     validate_string($auth_username_format)
     validate_string($auth_mechanisms)
     validate_array($auth_include)
+    validate_string($auth_master_separator)
 
     file { "${dovecot::directory}/conf.d/10-auth.conf":
         content => template('dovecot/conf.d/10-auth.conf.erb'),
