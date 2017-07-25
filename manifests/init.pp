@@ -10,7 +10,6 @@ class dovecot (
     #Used to limit the warnings for new format of dovecot.conf
     $version                      = 2,
     $plugins                      = [],
-    
     # dovecot.conf
     $protocols                    = undef,
     $listen                       = undef,
