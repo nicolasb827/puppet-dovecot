@@ -4,7 +4,7 @@ class dovecot::director (
     Array $director_mail_servers = undef,
     Integer $director_port       = undef,
     $lmtp_proxy                  = no,
-    Integer $lmtp_port           = undef,
+    $lmtp_port                   = undef,
     $lmtp_haproxy                = undef,
 
 ) {
