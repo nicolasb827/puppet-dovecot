@@ -1,9 +1,26 @@
 doveadm_password = <%= @password %>
+<% if @proxy_port -%>
+doveadm_proxy_port = <%= @proxy_port %>
+<% end -%>
 service doveadm {
+<% if @tcp_port -%>
+   inet_listener {
+      port = <%= @tcp_port %>
+   }
+<% end -%>
+
+<% if @http_port -%>
    inet_listener http {
-      port = <%= @port %>
+      port = <%= @http_port %>
 <% if @ssl -%>
       ssl = yes
 <% end -%>
    }
+<% end -%>
 }
+
+<% if @protocol_doveadm -%>
+protocol doveadm {
+  auth_socket_path = director-userdb
+}
+<% end -%>
