@@ -5,7 +5,10 @@ class dovecot::auth (
     $auth_username_format         = undef,
     $auth_mechanisms              = 'plain',
     $auth_include                 = [ 'system' ],
-    $auth_master_separator        = '*',
+    $auth_master_user_separator        = '*',
+    $auth_verbose                 = undef,
+    $auth_debug                   = undef,
+    $auth_debug_passwords         = undef,
 ) {
 
     # 10-auth.conf
@@ -14,9 +17,10 @@ class dovecot::auth (
     validate_string($auth_username_format)
     validate_string($auth_mechanisms)
     validate_array($auth_include)
-    validate_string($auth_master_separator)
+    validate_string($auth_master_user_separator)
 
     file { "${dovecot::directory}/conf.d/10-auth.conf":
         content => template('dovecot/conf.d/10-auth.conf.erb'),
+        notify  => Service['dovecot'];
     }
 }
