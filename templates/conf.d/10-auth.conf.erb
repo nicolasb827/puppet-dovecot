@@ -10,6 +10,15 @@
 <% if defined?(@disable_plaintext_auth) -%>
 disable_plaintext_auth = <%= @disable_plaintext_auth ? 'yes' : 'no' %>
 <% end -%>
+<% if defined?(@auth_verbose) -%>
+auth_verbose = <%= @auth_verbose ? 'yes' : 'no' %>
+<% end -%>
+<% if defined?(@auth_debug) -%>
+auth_debug = <%= @auth_debug ? 'yes' : 'no' %>
+<% end -%>
+<% if defined?(@auth_debug_passwords) -%>
+auth_debug_passwords = <%= @auth_debug_passwords ? 'yes' : 'no' %>
+<% end -%>
 
 # Authentication cache size (e.g. 10M). 0 means it's disabled. Note that
 # bsdauth, PAM and vpopmail require cache_key to be set for caching to be used.
@@ -65,7 +74,7 @@ auth_username_format = <%= @auth_username_format %>
 # separator, so that could be a good choice.
 #auth_master_user_separator =
 <% if @auth_master_user_separator -%>
-auth_master_user_separator = <%= @auth_master_separator %>
+auth_master_user_separator = <%= @auth_master_user_separator %>
 <% end -%>
 
 # Username to use for users logging in with ANONYMOUS SASL mechanism
