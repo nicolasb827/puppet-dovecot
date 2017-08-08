@@ -5,12 +5,13 @@ class dovecot::imap (
     $imap_mail_plugins            = undef,
     $imap_client_workarounds      = undef,
     $protocol_imap_listen         = true,
-    $capability                   = 'IMAP4rev1 UNSELECT ID CHILDREN NAMESPACE IDLE UIDPLUS',
+    $capability                   = undef,
 ) {
 
     validate_string($imap_mail_plugins)
 
     file { "${dovecot::directory}/conf.d/20-imap.conf":
         content => template('dovecot/conf.d/20-imap.conf.erb'),
+        notify  => Service['dovecot'];
     }
 }
