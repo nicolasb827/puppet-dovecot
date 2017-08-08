@@ -10,6 +10,7 @@ class dovecot (
     #Used to limit the warnings for new format of dovecot.conf
     $version                      = 2,
     $plugins                      = [],
+
     # dovecot.conf
     $protocols                    = undef,
     $listen                       = undef,
@@ -17,11 +18,8 @@ class dovecot (
     $login_trusted_networks       = undef,
     $verbose_proctitle            = undef,
     $shutdown_clients             = undef,
-
-    $mail_max_userip_connections  = 512,
-
-    $dict_acl                    = undef,
-
+    $mail_max_userip_connections  = undef,
+    $dict_acl                     = undef,
     $manage_service               = true,
     $custom_packages              = undef,
     $ensure_packages              = 'installed',
