@@ -11,6 +11,6 @@ class dovecot::quota (
 
     file { "${dovecot::directory}/conf.d/90-quota.conf":
         content => template('dovecot/conf.d/90-quota.conf.erb'),
+        notify  => Service['dovecot'];
     }
-
 }

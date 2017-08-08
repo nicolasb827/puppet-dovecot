@@ -15,6 +15,6 @@ class dovecot::lda (
 
     file { "${dovecot::directory}/conf.d/15-lda.conf":
         content => template('dovecot/conf.d/15-lda.conf.erb'),
+        notify  => Service['dovecot'];
     }
-
 }

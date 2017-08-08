@@ -30,6 +30,6 @@ class dovecot::mail (
 
     file { "${dovecot::directory}/conf.d/10-mail.conf":
         content => template('dovecot/conf.d/10-mail.conf.erb'),
+        notify  => Service['dovecot'];
     }
-
 }

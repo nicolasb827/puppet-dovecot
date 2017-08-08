@@ -22,6 +22,6 @@ class dovecot::sieve (
 
     file { "${dovecot::directory}/conf.d/90-sieve.conf":
         content => template('dovecot/conf.d/90-sieve.conf.erb'),
+        notify  => Service['dovecot'];
     }
-
 }

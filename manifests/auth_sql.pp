@@ -7,5 +7,6 @@ class dovecot::auth_sql (
 
     file { "${dovecot::directory}/conf.d/auth-sql.conf.ext" :
         content => template('dovecot/conf.d/auth-sql.conf.ext.erb'),
+        notify  => Service['dovecot'];
     }
 }

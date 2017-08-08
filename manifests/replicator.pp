@@ -11,6 +11,6 @@ class dovecot::replicator (
 
     file { "${dovecot::directory}/conf.d/99-replicator.conf":
         content => template('dovecot/conf.d/99-replicator.conf.erb'),
+        notify  => Service['dovecot'];
     }
-
 }

@@ -18,5 +18,6 @@ class dovecot::logging (
 
     file { "${dovecot::directory}/conf.d/10-logging.conf":
         content => template('dovecot/conf.d/10-logging.conf.erb'),
+        notify  => Service['dovecot'];
     }
 }

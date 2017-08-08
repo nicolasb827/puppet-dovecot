@@ -9,5 +9,6 @@ class dovecot::acl (
 
     file { "${dovecot::directory}/conf.d/90-acl.conf":
         content => template('dovecot/conf.d/90-acl.conf.erb'),
+        notify  => Service['dovecot'];
     }
 }

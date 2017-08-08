@@ -11,6 +11,6 @@ class dovecot::managesieve (
 
     file { "${dovecot::directory}/conf.d/20-managesieve.conf":
         content => template('dovecot/conf.d/20-managesieve.conf.erb'),
+        notify  => Service['dovecot'];
     }
-
 }

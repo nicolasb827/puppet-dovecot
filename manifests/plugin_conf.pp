@@ -7,6 +7,6 @@ class dovecot::plugin_conf (
 
     file { "${dovecot::directory}/conf.d/90-plugin.conf":
         content => template('dovecot/conf.d/90-plugin.conf.erb'),
+        notify  => Service['dovecot'];
     }
-
 }

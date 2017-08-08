@@ -7,6 +7,6 @@ class dovecot::pop3 (
 
     file { "${dovecot::directory}/conf.d/20-pop3.conf":
         content => template('dovecot/conf.d/20-pop3.conf.erb'),
+        notify  => Service['dovecot'];
     }
-
 }
