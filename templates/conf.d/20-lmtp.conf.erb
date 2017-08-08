@@ -8,10 +8,11 @@
 # When recipient address includes the detail (e.g. user+detail), try to save
 # the mail to the detail mailbox. See also recipient_delimiter and
 # lda_mailbox_autocreate settings.
-#lmtp_save_to_detail_mailbox = no
 <% if defined?(@lmtp_save_to_detail_mailbox) -%>
 lmtp_save_to_detail_mailbox = <%= @lmtp_save_to_detail_mailbox ? 'yes' : 'no' %>
-<%- end %>
+<% else -%>
+#lmtp_save_to_detail_mailbox = no
+<% end -%>
 
 protocol lmtp {
 
