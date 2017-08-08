@@ -3,25 +3,22 @@
 # passwd-like file with specified location.
 # <doc/wiki/AuthDatabase.PasswdFile.txt>
 
+<%- if @passdb %>
+<% @passdb.each do |passwd_file,contents| -%>
 passdb {
-  driver = passwd-file
-  <%- if @auth_passwdfile_passdb %>
-  args = <%= @auth_passwdfile_passdb -%>
-  <%- else %>
-  args = scheme=CRYPT username_format=%u <%= scope.lookupvar("dovecot::directory") %>/users
-  <%- end %>
+<% contents.each do |key,value| -%>
+  <%= key %> = <%= value %>
+<% end -%>
 }
+<% end -%>
+<% end -%>
 
+<%- if @userdb %>
+<% @userdb.each do |userdb_file,contents| -%>
 userdb {
-  driver = passwd-file
-  <%- if @auth_passwdfile_userdb %>
-  args = <%= @auth_passwdfile_userdb -%>
-  <%- else %>
-  args = username_format=%u <%= scope.lookupvar("dovecot::directory") %>/users
-  <%- end %>
-  # Default fields that can be overridden by passwd-file
-  #default_fields = quota_rule=*:storage=1G
-
-  # Override fields from passwd-file
-  #override_fields = home=/home/virtual/%u
+<% contents.each do |key,value| -%>
+  <%= key %> = <%= value %>
+<% end -%>
 }
+<% end -%>
+<% end -%>
