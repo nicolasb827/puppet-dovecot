@@ -1,3 +1,13 @@
+<%- |
+String $log_path = "/var/log/dovecot.log",
+Optional[String] $info_log_path = undef,
+Optional[String] $debug_log_path = undef,
+Optional[String] $log_timestamp = undef,
+String $log_facility = "mail",
+Boolean $auth_verbose = false,
+Boolean $auth_debug = false,
+Boolean $mail_debug = false,
+| -%>
 ##
 ## Log destination.
 ##
@@ -5,25 +15,25 @@
 # Log file to use for error messages. "syslog" logs to syslog,
 # /dev/stderr logs to stderr.
 #log_path = syslog
-<% if @log_path -%>
-log_path = <%= @log_path %>
-<% end -%>
+<% if $log_path -%>
+log_path = <%= $log_path %>
+<% } -%>
 
 # Log file to use for informational messages. Defaults to log_path.
 #info_log_path =
-<% if @info_log_path -%>
-info_log_path = <%= @info_log_path %>
-<% end -%>
+<% unless $info_log_path =~ Undef { -%>
+info_log_path = <%= $info_log_path %>
+<% } -%>
 # Log file to use for debug messages. Defaults to info_log_path.
 #debug_log_path =
-<% if @debug_log_path -%>
-debug_log_path = <%= @debug_log_path %>
-<% end -%>
+<% unless $debug_log_path =~ Undef { -%>
+debug_log_path = <%= $debug_log_path %>
+<% } -%>
 
 # Syslog facility to use if you're logging to syslog. Usually if you don't
 # want to use "mail", you'll use local0..local7. Also other standard
 # facilities are supported.
-#syslog_facility = mail
+syslog_facility = <%= $log_facility %>
 
 ##
 ## Logging verbosity and debugging.
@@ -31,9 +41,7 @@ debug_log_path = <%= @debug_log_path %>
 
 # Log unsuccessful authentication attempts and the reasons why they failed.
 #auth_verbose = no
-<% if @auth_verbose -%>
-auth_verbose = <%= @auth_verbose %>
-<% end -%>
+auth_verbose = <%= str2bool($auth_verbose, "yes", "no") %>
 
 # In case of password mismatches, log the attempted password. Valid values are
 # no, plain and sha1. sha1 can be useful for detecting brute force password
@@ -44,9 +52,7 @@ auth_verbose = <%= @auth_verbose %>
 # Even more verbose logging for debugging purposes. Shows for example SQL
 # queries.
 #auth_debug = no
-<% if @auth_debug -%>
-auth_debug = <%= @auth_debug %>
-<% end -%>
+auth_debug = <%= str2bool($auth_debug, "yes", "no") %>
 
 # In case of password mismatches, log the passwords and used scheme so the
 # problem can be debugged. Enabling this also enables auth_debug.
@@ -55,9 +61,7 @@ auth_debug = <%= @auth_debug %>
 # Enable mail process debugging. This can help you figure out why Dovecot
 # isn't finding your mails.
 #mail_debug = no
-<% if @mail_debug -%>
-mail_debug = <%= @mail_debug %>
-<% end -%>
+mail_debug = <%= str2bool($mail_debug, "yes", "no") %>
 
 # Show protocol level SSL errors.
 #verbose_ssl = no
@@ -80,9 +84,9 @@ plugin {
 # Prefix for each line written to log file. % codes are in strftime(3)
 # format.
 #log_timestamp = "%b %d %H:%M:%S "
-<% if @log_timestamp -%>
-log_timestamp = <%= @log_timestamp -%>
-<% end -%>
+<% unless $log_timestamp =~ Undef { -%>
+log_timestamp = <%= $log_timestamp -%>
+<% } -%>
 
 # Space-separated list of elements we want to log. The elements which have
 # a non-empty variable value are joined together to form a comma-separated

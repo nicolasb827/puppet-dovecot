@@ -7,7 +7,8 @@ class dovecot::logging (
   $auth_verbose   = undef,
   $auth_debug     = undef,
   $mail_debug     = undef,
-  $template       = 'dovecot/conf.d/10-logging.conf.erb') {
+  $log_facility   = "mail",
+  $template       = 'dovecot/conf.d/10-logging.conf.epp') {
   # 10-logging.conf
   validate_string($log_path)
   validate_string($log_timestamp)
@@ -16,7 +17,11 @@ class dovecot::logging (
   validate_string($mail_debug)
 
   file { "${dovecot::directory}/conf.d/10-logging.conf":
-    content => template($template),
+    content => epp($template, {
+      'log_path'     => $info_log_path,
+      'log_facility' => $log_facility,
+    }
+    ),
     notify  => Service['dovecot'];
   }
 }
