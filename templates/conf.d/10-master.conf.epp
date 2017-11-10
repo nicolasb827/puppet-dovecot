@@ -1,0 +1,295 @@
+<%- |   
+| -%>
+<% if @default_process_limit -%>
+default_process_limit = <%= @default_process_limit %>
+<% else -%>
+#default_process_limit = 100
+<% end -%>
+<% if @default_client_limit -%>
+default_client_limit = <%= @default_client_limit %>
+<% else -%>
+#default_client_limit = 1000
+<% end -%>
+
+# Default VSZ (virtual memory size) limit for service processes. This is mainly
+# intended to catch and kill processes that leak memory before they eat up
+# everything.
+<% if @default_vsz_limit -%>
+default_vsz_limit = <%= @default_vsz_limit -%>
+<% else -%>
+#default_vsz_limit = 256M
+<%- end %>
+
+# Login user is internally used by login processes. This is the most untrusted
+# user in Dovecot system. It shouldn't have access to anything at all.
+#default_login_user = dovenull
+
+# Internal user is used by unprivileged processes. It should be separate from
+# login user, so that login processes can't disturb other processes.
+#default_internal_user = dovecot
+<% if @haproxy_trusted_networks -%>
+
+haproxy_trusted_networks = <%= @haproxy_trusted_networks.join(' ') %>
+
+<% end -%>
+service imap-login {
+<% if @imap_login_client_limit -%>
+  client_limit = <%= @imap_login_client_limit %>
+<% end -%>
+<% if @imap_login_process_limit -%>
+  process_limit = <%= @imap_login_process_limit %>
+<% end -%>
+  inet_listener imap {
+<% if @imap_haproxy -%>
+    haproxy = <%= @imap_haproxy ? 'yes' : 'no'  %>
+<% else -%>
+    #haproxy = no
+<% end -%>
+<% if @imaplogin_imap_port and @imaplogin_imap_port >= 0 -%>
+    port = <%= @imaplogin_imap_port %>
+  }
+<% else -%>
+    #port = 143
+<% end -%>
+  inet_listener imaps {
+<% if @imaps_haproxy -%>
+    haproxy = <%= @imaps_haproxy ? 'yes' : 'no'  %>
+<% else -%>
+    #haproxy = no
+<% end -%>
+<% if @imaplogin_imaps_port and @imaplogin_imaps_port >= 0 -%>
+    port = <%= @imaplogin_imaps_port %>
+<% if defined?(@imaplogin_imaps_ssl) -%>
+    ssl = <%= @imaplogin_imaps_ssl ? 'yes' : 'no' %>
+<% else -%>
+    #ssl = yes
+<% end -%>
+<% else -%>
+    #port = 993
+<% end -%>
+  }
+
+  # Number of connections to handle before starting a new process. Typically
+  # the only useful values are 0 (unlimited) or 1. 1 is more secure, but 0
+  # is faster. <doc/wiki/LoginProcess.txt>
+<% if not @imap_login_service_count.nil? -%>
+  service_count = <%= @imap_login_service_count %>
+<% else -%>
+  #service_count = 1
+<% end -%>
+
+  # Number of processes to always keep waiting for more connections.
+<% if @imap_login_process_min_avail -%>
+  process_min_avail = <%= @imap_login_process_min_avail %>
+<% else -%>
+  #process_min_avail = 0
+<% end -%>
+
+  # If you set service_count=0, you probably need to grow this.
+<% if @imap_login_vsz_limit -%>
+  vsz_limit = <%= @imap_login_vsz_limit %>
+<% else -%>
+  #vsz_limit = $default_vsz_limit
+<% end -%>
+}
+
+<% if @enable_pop3 -%>
+service pop3-login {
+<% if @pop3_login_process_limit -%>
+  process_limit = <%= @pop3_login_process_limit %>
+<% end -%>
+  inet_listener pop3 {
+<% if @pop3_haproxy -%>
+    haproxy = <%= @pop3_haproxy ? 'yes' : 'no'  %>
+<% else -%>
+    #haproxy = no
+<% end -%>
+<% if @pop3login_pop3_port and @pop3login_pop3_port >= 0 -%>
+    port = <%= @pop3login_pop3_port %>
+<% else -%>
+    #port = 110
+<% end -%>
+  }
+  inet_listener pop3s {
+<% if @pop3s_haproxy -%>
+    haproxy = <%= @pop3s_haproxy ? 'yes' : 'no'  %>
+<% else -%>
+    #haproxy = no
+<% end -%>
+
+<% if @pop3login_pop3s_port and @pop3login_pop3s_port >= 0 -%>
+    port = <%= @pop3login_pop3s_port %>
+<% if defined?(@pop3login_pop3s_ssl) -%>
+    ssl = <%= @pop3login_pop3s_ssl ? 'yes' : 'no' %>
+<% else -%>
+    #ssl = yes
+<% end -%>
+<% else -%>
+    #port = 995
+<% end -%>
+  }
+<% if not @pop3_login_service_count.nil? -%>
+  service_count = <%= @pop3_login_service_count %>
+<% end -%>
+<% if @pop3_login_process_min_avail -%>
+  process_min_avail = <%= @pop3_login_process_min_avail %>
+<% end -%>
+}
+<% end -%>
+
+service lmtp {
+  unix_listener <% if @lmtp_unix_listener -%><%= @lmtp_unix_listener %><% else %>lmtp<% end -%> {
+<% if @lmtp_unix_listener_mode -%>
+    mode = <%= @lmtp_unix_listener_mode %>
+<% else -%>
+    #mode = 0666
+<% end -%>
+<% if @lmtp_unix_listener_user -%>
+    user = <%= @lmtp_unix_listener_user %>
+<% else -%>
+    #user =
+<% end -%>
+<% if @lmtp_unix_listener_group -%>
+    group = <%= @lmtp_unix_listener_group %>
+<% else -%>
+    #group =
+<% end -%>
+  }
+
+  # Create inet listener only if you can't use the above UNIX socket
+  #inet_listener lmtp {
+    # Avoid making LMTP visible for the entire internet
+    #address =
+    #port =
+  #}
+<% if @lmtp_socket_path -%>
+  unix_listener <%= @lmtp_socket_path %> {
+<% if @lmtp_socket_user -%>
+     user = <%= @lmtp_socket_user %>
+<% end -%>
+<% if @lmtp_socket_group -%>
+     group = <%= @lmtp_socket_group %>
+<% end -%>
+<% if @lmtp_socket_mode -%>
+     mode = <%= @lmtp_socket_mode %>
+<% end -%>
+  }
+<% end -%>
+}
+
+service imap {
+  # Most of the memory goes to mmap()ing files. You may need to increase this
+  # limit if you have huge mailboxes.
+  #vsz_limit = $default_vsz_limit
+
+  # Max. number of IMAP processes (connections)
+<% if @imap_process_limit -%>
+  process_limit = <%= @imap_process_limit %>
+<% else -%>
+  #process_limit = 1024
+<% end -%>
+<% if @imap_process_limit -%>
+  service_count = <%= @imap_service_count %>
+<% end -%>
+}
+
+service pop3 {
+  # Max. number of POP3 processes (connections)
+<% if @pop3_process_limit -%>
+  process_limit = <%= @pop3_process_limit %>
+<% else -%>
+  #process_limit = 1024
+<% end -%>
+<% if @pop3_process_limit -%>
+  service_count = <%= @pop3_service_count %>
+<% end -%>
+}
+
+service auth {
+  # auth_socket_path points to this userdb socket by default. It's typically
+  # used by dovecot-lda, doveadm, possibly imap process, etc. Users that have
+  # full permissions to this socket are able to get a list of all usernames and
+  # get the results of everyone's userdb lookups.
+  #
+  # The default 0666 mode allows anyone to connect to the socket, but the
+  # userdb lookups will succeed only if the userdb returns an "uid" field that
+  # matches the caller process's UID. Also if caller's uid or gid matches the
+  # socket's uid or gid the lookup succeeds. Anything else causes a failure.
+  #
+  # To give the caller full permissions to lookup all users, set the mode to
+  # something else than 0666 and Dovecot lets the kernel enforce the
+  # permissions (e.g. 0777 allows everyone full permissions).
+  unix_listener auth-userdb {
+<% if @auth_listener_userdb_mode -%>
+    mode = <%= @auth_listener_userdb_mode %>
+<% else -%>
+    #mode = 0600
+<% end -%>
+<% if @auth_listener_userdb_user -%>
+    user = <%= @auth_listener_userdb_user %>
+<% else -%>
+    #user =
+<% end -%>
+<% if @auth_listener_userdb_group -%>
+    group = <%= @auth_listener_userdb_group %>
+<% else -%>
+    #group =
+<% end -%>
+  }
+
+  # Postfix smtp-auth
+  #unix_listener /var/spool/postfix/private/auth {
+  #  mode = 0666
+  #}
+<% if @auth_listener_postfix -%>
+  unix_listener /var/spool/postfix/private/auth {
+<% if @auth_listener_postfix_mode -%>
+    mode = <%= @auth_listener_postfix_mode %>
+<% else -%>
+    mode = 0666
+<% end -%>
+<% if @auth_listener_postfix_user -%>
+    user = <%= @auth_listener_postfix_user %>
+<% end -%>
+<% if @auth_listener_postfix_group -%>
+    group = <%= @auth_listener_postfix_group %>
+<% end -%>
+  }
+<% end -%>
+
+  # Auth process is run as this user.
+<% if @auth_listener_default_user -%>
+  user = <%= @auth_listener_default_user %>
+<% else -%>
+  #user = $default_internal_user
+<% end -%>
+}
+
+service auth-worker {
+  # Auth worker process is run as root by default, so that it can access
+  # /etc/shadow. If this isn't necessary, the user should be changed to
+  # $default_internal_user.
+  #user = root
+}
+
+service dict {
+  # If dict proxy is used, mail processes should have access to its socket.
+  # For example: mode=0660, group=vmail and global mail_access_groups=vmail
+  unix_listener dict {
+<% if @dict_listener_mode -%>
+    mode = <%= @dict_listener_mode %>
+<% else -%>
+    #mode = 0600
+<% end -%>
+<% if @dict_listener_user -%>
+    user = <%= @dict_listener_user %>
+<% else -%>
+    #user = 
+<% end -%>
+<% if @dict_listener_group -%>
+    group = <%= @dict_listener_group %>
+<% else -%>
+    #group = 
+<% end -%>
+  }
+}

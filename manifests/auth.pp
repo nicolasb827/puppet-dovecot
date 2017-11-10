@@ -6,10 +6,10 @@ class dovecot::auth (
   $auth_mechanisms            = 'plain',
   $auth_include               = ['system'],
   $auth_master_user_separator = '*',
-  $auth_verbose               = undef,
+  $auth_.eppose               = undef,
   $auth_debug                 = undef,
   $auth_debug_passwords       = undef,
-  $template                   = 'dovecot/conf.d/10-auth.conf.erb') {
+  $template                   = 'dovecot/conf.d/10-auth.conf.epp') {
   # 10-auth.conf
   validate_bool($disable_plaintext_auth)
   validate_string($auth_username_chars)
@@ -19,7 +19,9 @@ class dovecot::auth (
   validate_string($auth_master_user_separator)
 
   file { "${dovecot::directory}/conf.d/10-auth.conf":
-    content => template($template),
+    content => epp($template, {
+    }
+    ),
     notify  => Service['dovecot'];
   }
 }

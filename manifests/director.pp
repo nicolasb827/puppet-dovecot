@@ -6,9 +6,11 @@ class dovecot::director (
   $lmtp_proxy            = no,
   $lmtp_port             = undef,
   $lmtp_haproxy          = undef,
-  $template              = 'dovecot/conf.d/10-director.conf.erb') {
+  $template              = 'dovecot/conf.d/10-director.conf.epp') {
   file { "${dovecot::directory}/conf.d/10-director.conf":
-    content => template($template),
+    content => epp($template, {
+    }
+    ),
     notify  => Service['dovecot'];
   }
 }

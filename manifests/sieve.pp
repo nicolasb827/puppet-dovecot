@@ -12,7 +12,7 @@ class dovecot::sieve (
   $sieve_quota_max_storage = undef,
   $sieve_extensions        = undef,
   $recipient_delimiter     = undef,
-  $template                = 'dovecot/conf.d/90-sieve.conf.erb') {
+  $template                = 'dovecot/conf.d/90-sieve.conf.epp') {
   # 90-sieve.conf
   validate_string($sieve)
   validate_string($sieve_dir)
@@ -20,7 +20,9 @@ class dovecot::sieve (
   validate_string($recipient_delimiter)
 
   file { "${dovecot::directory}/conf.d/90-sieve.conf":
-    content => template($template),
+    content => epp($template, {
+    }
+    ),
     notify  => Service['dovecot'];
   }
 }

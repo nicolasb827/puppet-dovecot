@@ -19,7 +19,7 @@ class dovecot::mail (
   $first_valid_uid   = false,
   $last_valid_uid    = false,
   $shared_mailboxes  = false,
-  $template          = 'dovecot/conf.d/10-mail.conf.erb') {
+  $template          = 'dovecot/conf.d/10-mail.conf.epp') {
   validate_bool($shared_mailboxes)
 
   # 10-mail.conf
@@ -30,7 +30,9 @@ class dovecot::mail (
   validate_string($mail_plugins)
 
   file { "${dovecot::directory}/conf.d/10-mail.conf":
-    content => template($template),
+    content => epp($template, {
+    }
+    ),
     notify  => Service['dovecot'];
   }
 }

@@ -2,7 +2,7 @@ class dovecot::replicator (
   $options_plugins = {
   }
   ,
-  $template        = 'dovecot/conf.d/99-replicator.conf.erb') {
+  $template        = 'dovecot/conf.d/99-replicator.conf.epp') {
   validate_hash($options_plugins)
   validate_hash($options_plugins[replication])
   validate_string($options_plugins[replication][mail_replica])
@@ -11,7 +11,9 @@ class dovecot::replicator (
   validate_string($options_plugins[replication][replication_dsync_parameters])
 
   file { "${dovecot::directory}/conf.d/99-replicator.conf":
-    content => template($template),
+    content => epp($template, {
+    }
+    ),
     notify  => Service['dovecot'];
   }
 }

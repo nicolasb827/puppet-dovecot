@@ -46,7 +46,7 @@ class dovecot::master (
   $pop3login_pop3s_port         = -1,
   Boolean $pop3s_haproxy                = false,
   $pop3login_pop3s_ssl          = false,
-  $template                     = 'dovecot/conf.d/10-master.conf.erb') {
+  $template                     = 'dovecot/conf.d/10-master.conf.epp') {
   # 10-master.conf
   validate_string($default_client_limit)
   validate_string($auth_listener_userdb_mode)
@@ -68,7 +68,9 @@ class dovecot::master (
   validate_bool($pop3login_pop3s_ssl)
 
   file { "${dovecot::directory}/conf.d/10-master.conf":
-    content => template($template),
+    content => epp($template, {
+    }
+    ),
     notify  => Service['dovecot'];
   }
 }

@@ -5,18 +5,22 @@ class dovecot::auth_ldap (
   $config                  = {
   }
   ,
-  $template_auth_ldap      = 'dovecot/conf.d/auth-ldap.conf.ext.erb',
-  $template_dovecot_ldap   = 'dovecot/dovecot-ldap.conf.ext.erb') {
+  $template_auth_ldap      = 'dovecot/conf.d/auth-ldap.conf.ext.epp',
+  $template_dovecot_ldap   = 'dovecot/dovecot-ldap.conf.ext.epp') {
   validate_string($ldap_uris)
 
   file { "${dovecot::directory}/conf.d/auth-ldap.conf.ext":
-    content => template($template_auth_ldap),
+    content => epp($template_auth_ldap, {
+    }
+    ),
     notify  => Service['dovecot'];
   }
 
   if 'ldap' in $dovecot::plugins {
     file { "${dovecot::directory}/dovecot-ldap.conf.ext":
-      content => template($template_dovecot_ldap),
+      content => epp($template_dovecot_ldap, {
+      }
+      ),
       notify  => Service['dovecot'];
     }
   }

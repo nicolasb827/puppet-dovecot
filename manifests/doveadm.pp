@@ -6,9 +6,11 @@ class dovecot::doveadm (
   $ssl              = undef,
   $tcp_port         = undef,
   $protocol_doveadm = undef,
-  $template         = 'dovecot/conf.d/30-doveadm.conf.erb') {
+  $template         = 'dovecot/conf.d/30-doveadm.conf.epp') {
   file { "${dovecot::directory}/conf.d/30-doveadm.conf":
-    content => template(),
+    content => epp($template, {
+    }
+    ),
     notify  => Service['dovecot'];
   }
 }

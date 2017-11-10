@@ -6,7 +6,7 @@ class dovecot::lda (
   $lda_mail_location         = undef,
   $lda_mailbox_autocreate    = undef,
   $lda_mailbox_autosubscribe = undef,
-  $template                  = 'dovecot/conf.d/15-lda.conf.erb') {
+  $template                  = 'dovecot/conf.d/15-lda.conf.epp') {
   # 15-lda.conf
   validate_string($postmaster_address)
   validate_string($hostname)

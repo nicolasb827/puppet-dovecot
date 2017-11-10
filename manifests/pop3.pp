@@ -3,9 +3,11 @@ class dovecot::pop3 (
   $pop3_mail_plugins       = undef,
   $pop3_uidl_format        = undef,
   $pop3_client_workarounds = undef,
-  $template                = 'dovecot/conf.d/20-pop3.conf.erb') {
+  $template                = 'dovecot/conf.d/20-pop3.conf.epp') {
   file { "${dovecot::directory}/conf.d/20-pop3.conf":
-    content => template($template),
+    content => epp($template, {
+    }
+    ),
     notify  => Service['dovecot'];
   }
 }

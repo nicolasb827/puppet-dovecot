@@ -6,11 +6,13 @@ class dovecot::imap (
   $imap_client_workarounds = undef,
   $protocol_imap_listen    = true,
   $capability              = undef,
-  $template                = 'dovecot/conf.d/20-imap.conf.erb') {
+  $template                = 'dovecot/conf.d/20-imap.conf.epp') {
   validate_string($imap_mail_plugins)
 
   file { "${dovecot::directory}/conf.d/20-imap.conf":
-    content => template($template),
+    content => epp($template, {
+    }
+    ),
     notify  => Service['dovecot'];
   }
 }
