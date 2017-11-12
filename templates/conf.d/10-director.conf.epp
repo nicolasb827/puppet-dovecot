@@ -1,9 +1,9 @@
-<%- | Array[String] $director_servers,
-      Array[String] $director_mail_servers,
-      Integer       $director_port,
-      Boolean       $lmtp_proxy,
-      Boolean       $lmtp_haproxy,
-      Integer       $lmtp_port,
+<%- | Optional[Array[String]] $director_servers = undef,
+      Optional[Array[String]] $director_mail_servers = undef,
+      Optional[Integer]       $director_port = undef,
+      Boolean       $lmtp_proxy = true,
+      Optional[Boolean] $lmtp_haproxy = undef,
+      Optional[Integer] $lmtp_port = undef,
 | -%>
 ##
 ## Director-specific settings.
@@ -18,18 +18,14 @@
 # List of IPs or hostnames to all director servers, including ourself.
 # Ports can be specified as ip:port. The default port is the same as
 # what director service's inet_listener is using.
-<% if $director_servers { -%>
+<% unless $director_servers =~ Undef { -%>
 director_servers = <%= $director_servers.join(' ') %>
-<% } else { -%>
-#director_servers =
 <% } -%>
 
 # List of IPs or hostnames to all backend mail servers. Ranges are allowed
 # too, like 10.0.0.10-10.0.0.30.
-<% if $director_mail_servers { -%>
+<% unless $director_mail_servers =~ Undef { -%>
 director_mail_servers = <%= $director_mail_servers.join(' ') %>
-<% } else { -%>
-#director_mail_servers =
 <% } -%>
 
 # How long to redirect users to a specific server after it no longer has
@@ -57,10 +53,8 @@ service director {
     mode = 0600
   }
   inet_listener {
-<% if $director_port { -%>
+<% unless $director_port =~ Undef { -%>
     port = <%= $director_port %>
-<% } else { -%>
-    #port =
 <% } -%>
   }
 }
@@ -76,9 +70,7 @@ service pop3-login {
 # LMTP first does a passdb lookup to to see if there's a proxy field returned.
 # If not, it fallbacks to doing userdb lookup.
 <% if $lmtp_proxy { -%>
-lmtp_proxy = <%= str2bool($lmtp_proxy,'yes','no')  %>
-<% } else { -%>
-# lmtp_proxy = yes
+lmtp_proxy = <%= bool2str($lmtp_proxy,'yes','no')  %>
 <% } -%>
 
 # Enable director for LMTP proxying:
@@ -89,13 +81,13 @@ protocol lmtp {
 #If you want lmtp-proxy listening on the network, uncomment the following:
 service lmtp {
 inet_listener lmtp {
-<% if $lmtp_haproxy { -%>
-    haproxy = <%= str2bool($lmtp_haproxy, 'yes', 'no')  %>
+<% if $lmtp_haproxy !~ Undef { -%>
+    haproxy = <%= bool2str($lmtp_haproxy, 'yes', 'no')  %>
 <% } else { -%>
     #haproxy =
 <% } -%>
-<% if $lmtp_port { -%>
-    port = <%= $mtp_port %>
+<% if $lmtp_port !~ Undef { -%>
+    port = <%= $lmtp_port %>
 <% } else { -%>
     #port =
 <% } -%>

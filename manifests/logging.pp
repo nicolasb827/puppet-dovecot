@@ -10,16 +10,25 @@ class dovecot::logging (
   $log_facility   = "mail",
   $template       = 'dovecot/conf.d/10-logging.conf.epp') {
   # 10-logging.conf
-  validate_string($log_path)
-  validate_string($log_timestamp)
-  validate_string($auth_verbose)
-  validate_string($auth_debug)
-  validate_string($mail_debug)
+
+  validate_legacy('Optional[String]', 'validate_string', $log_path)
+  validate_legacy('Optional[String]', 'validate_string', $debug_log_path)
+  validate_legacy('Optional[String]', 'validate_string', $log_timestamp)
+  validate_legacy('String', 'validate_string', $log_facility)
+  validate_legacy('Optional[Boolean]', 'validate_bool', $auth_verbose)
+  validate_legacy('Optional[Boolean]', 'validate_bool', $auth_debug)
+  validate_legacy('Optional[Boolean]', 'validate_bool', $mail_debug)
 
   file { "${dovecot::directory}/conf.d/10-logging.conf":
     content => epp($template, {
-      'log_path'     => $info_log_path,
-      'log_facility' => $log_facility,
+      log_path       => $info_log_path,
+      info_log_path  => $info_log_path,
+      debug_log_path => $debug_log_path,
+      log_timestamp  => $log_timestamp,
+      log_facility   => $log_facility,
+      auth_verbose   => $auth_verbose,
+      auth_debug     => $auth_debug,
+      mail_debug     => $mail_debug,
     }
     ),
     notify  => Service['dovecot'];

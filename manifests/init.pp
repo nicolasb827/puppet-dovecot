@@ -15,7 +15,7 @@ class dovecot (
   $listen            = undef,
   $login_greeting    = undef,
   $login_trusted_networks      = undef,
-  $.eppose_proctitle = undef,
+  $verbose_proctitle = undef,
   $shutdown_clients  = undef,
   $mail_max_userip_connections = undef,
   $dict_acl          = undef,
@@ -25,17 +25,18 @@ class dovecot (
   validate_integer($version)
   validate_array($plugins)
   # dovecot.conf
-  validate_string($protocols)
-  validate_string($listen)
-  validate_string($login_greeting)
-  validate_string($login_trusted_networks)
-  validate_string($.eppose_proctitle)
-  validate_string($shutdown_clients)
+  validate_legacy('Optional[Array[String]]', 'is_array', $protocols)
+  validate_legacy('Optional[String]', 'validate_string', $listen)
+  validate_legacy('Optional[String]', 'validate_string', $login_greeting)
+  validate_legacy('Optional[Array[String]]', 'is_array', $login_trusted_networks)
+  validate_legacy('Optional[Boolean]', 'validate_string', $verbose_proctitle)
+  validate_legacy('Optional[Boolean]', 'validate_string', $shutdown_clients)
 
   if $custom_packages == undef {
     case $::operatingsystem {
       'RedHat', 'CentOS' : {
         $packages = ['dovecot', 'dovecot-pigeonhole']
+        dovecot-pigeonhole
       }
       'Debian', 'Ubuntu' : {
         $packages = [
@@ -113,6 +114,14 @@ class dovecot (
   # Main configuration file
   file { "${directory}/dovecot.conf":
     content => epp('dovecot/dovecot.conf.epp', {
+      directory              => $directory,
+      protocols              => $protocols,
+      listen                 => $listen,
+      login_greeting         => $login_greeting,
+      login_trusted_networks => $login_trusted_networks,
+      verbose_proctitle      => $verbose_proctitle,
+      shutdown_clients       => $shutdown_clients,
+      dict_acl               => $dict_acl,
     }
     ),
   }

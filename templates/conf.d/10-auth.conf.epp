@@ -1,11 +1,12 @@
-<%- | Boolean $disable_plaintext_auth
-	  Boolean $auth_verbose,
-	  Boolean $auth_debug,
-	  Boolean $auth_debug_passwords,
-	  String  $auth_username_chars,
-	  String  $auth_username_format,
-	  String  $auth_master_user_separator,
-	  Array[String] $auth_include,  
+<%- | Boolean $disable_plaintext_auth = true,
+	  Boolean $auth_verbose = true,
+	  Boolean $auth_debug = false,
+	  Boolean $auth_debug_passwords = false,
+	  Optional[String] $auth_username_chars = undef,
+	  Optional[String] $auth_username_format = undef,
+	  Optional[String] $auth_master_user_separator = undef,
+	  Array[String] $auth_mechanisms = ["login","digest-md5","cram-md5"],
+	  Array[String] $auth_include = [],  
 | -%>
 ##
 ## Authentication processes
@@ -15,26 +16,13 @@
 # SSL/TLS is used (LOGINDISABLED capability). Note that if the remote IP
 # matches the local IP (ie. you're connecting from the same computer), the
 # connection is considered secure and plaintext authentication is allowed.
-<% if $disable_plaintext_auth { -%>
-disable_plaintext_auth = <%= str2bool($disable_plaintext_auth, 'yes', 'no') %>
-<% } else { -%>
-#disable_plaintext_auth = yes
-<% } -%>
-<% if $auth_verbose { -%>
-auth_verbose = <%= str2bool($auth_verbose, 'yes', 'no') %>
-<% } else { -%>
-#auth_verbose = yes
-<% } -%>
-<% if $auth_debug { -%>
-auth_debug = <%= str2bool($auth_debug, 'yes', 'no') %>
-<% } else { -%>
-#auth_debug = yes
-<% } -%>
-<% if $auth_debug_passwords { -%>
-auth_debug_passwords = <%= str2bool($auth_debug_passwords, 'yes', 'no') %>
-<% } else { -%>
-#auth_debug_passwords = yes
-<% } -%>
+disable_plaintext_auth = <%= bool2str($disable_plaintext_auth, 'yes', 'no') %>
+
+auth_verbose = <%= bool2str($auth_verbose, 'yes', 'no') %>
+
+auth_debug = <%= bool2str($auth_debug, 'yes', 'no') %>
+
+auth_debug_passwords = <%= bool2str($auth_debug_passwords, 'yes', 'no') %>
 
 # Authentication cache size (e.g. 10M). 0 means it's disabled. Note that
 # bsdauth, PAM and vpopmail require cache_key to be set for caching to be used.
@@ -65,7 +53,7 @@ auth_debug_passwords = <%= str2bool($auth_debug_passwords, 'yes', 'no') %>
 # vulnerabilities with SQL/LDAP databases. If you want to allow all characters,
 # set this value to empty.
 #auth_username_chars = abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890.-_@
-<% if $auth_username_chars { -%>
+<% unless $auth_username_chars =~ Undef { -%>
 auth_username_chars = <%= $auth_username_chars %>
 <% } -%>
 
@@ -79,7 +67,7 @@ auth_username_chars = <%= $auth_username_chars %>
 # drop away the domain if it was given, or "%n-AT-%d" would change the '@' into
 # "-AT-". This translation is done after auth_username_translation changes.
 #auth_username_format =
-<% if $auth_username_format { -%>
+<% unless $auth_username_format =~ Undef { -%>
 auth_username_format = <%= $auth_username_format %>
 <% } -%>
 
@@ -89,7 +77,7 @@ auth_username_format = <%= $auth_username_format %>
 # is then <username><separator><master username>. UW-IMAP uses "*" as the
 # separator, so that could be a good choice.
 #auth_master_user_separator =
-<% if $auth_master_user_separator { -%>
+<% unless $auth_master_user_separator =~ Undef { -%>
 auth_master_user_separator = <%= $auth_master_user_separator %>
 <% } -%>
 
@@ -133,7 +121,7 @@ auth_master_user_separator = <%= $auth_master_user_separator %>
 #   plain login digest-md5 cram-md5 ntlm rpa apop anonymous gssapi otp skey
 #   gss-spnego
 # NOTE: See also disable_plaintext_auth setting.
-auth_mechanisms = <%= @auth_mechanisms %>
+auth_mechanisms = <%= $auth_mechanisms.join(" ") %>
 
 ##
 ## Password and user databases
@@ -153,12 +141,12 @@ auth_mechanisms = <%= @auth_mechanisms %>
 # <doc/wiki/UserDatabase.txt>
 
 #!include auth-deny.conf.ext
-#!include auth-master.conf.ext
+<% unless $auth_master_user_separator =~ Undef { -%>
+!include auth-master.conf.ext
+<% } -%>
 
-<% if $auth_include { -%>
-  <%- $auth_include.each do |auth| { -%>
+<%- $auth_include.each |$auth| { -%>
 !include auth-<%= $auth %>.conf.ext
-  <%- } -%>
 <%- } -%>
 #!include auth-system.conf.ext
 #!include auth-sql.conf.ext
